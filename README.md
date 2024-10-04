@@ -5,3 +5,7 @@ BookMyLesson is a lesson management system designed to help organizations offer 
 
 ## UML Use Case Diagram
 ![](assets/uml_use_case.png)
+
+## Team Members
+Syed Ayaan Jilani (40209519)
+Mario Thomas Esposito (40205337)
