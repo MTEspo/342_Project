@@ -7,7 +7,7 @@ BookMyLesson is a lesson management system designed to help organizations offer 
 All of the diagrams are present in assets folder of the repository and organized based on each iteration.
 
 ## Team Info
-Section: H
-Team Number: 24
-Team Member 1: Syed Ayaan Jilani (40209519)
+Section: H </br>
+Team Number: 24 </br>
+Team Member 1: Syed Ayaan Jilani (40209519) </br>
 Team Member 2: Mario Thomas Esposito (40205337)
