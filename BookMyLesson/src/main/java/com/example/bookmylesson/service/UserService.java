@@ -33,10 +33,16 @@ public class UserService {
     }
     
     public void logout() {
+    	if (currentUser == null) {
+    		throw new IllegalStateException("No user logged in");
+    	}
     	this.currentUser = null;
     }
     
     public User getCurrentUser() {
+    	if (currentUser == null) {
+    		throw new IllegalStateException("No user logged in");
+    	}
         return currentUser;
     }
     

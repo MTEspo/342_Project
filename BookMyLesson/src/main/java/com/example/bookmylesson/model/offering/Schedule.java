@@ -14,10 +14,6 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @ManyToOne
-    @JoinColumn(name = "location_id", nullable = false)
-    private Location location;
 
     @ElementCollection(targetClass = Days.class)
     private Set<Days> days;
@@ -27,25 +23,24 @@ public class Schedule {
 
     private LocalTime startTime;
     private LocalTime endTime;
+    
+    @OneToOne(mappedBy = "schedule", cascade = CascadeType.ALL, optional = false)
+    private Location location;
 
     // Constructor
     public Schedule() {}
-
-    public Schedule(Location location) {
-        this.location = location;
+    
+    public Schedule(Set<Days> days, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    	this.days = days;
+    	this.startDate = startDate;
+    	this.endDate = endDate;
+    	this.startTime = startTime;
+    	this.endTime = endTime;
     }
 
     // Getters and Setters
     public Long getId() {
         return id;
-    }
-    
-    public Location getLocation() {
-    	return location;
-    }
-    
-    public void setLocation(Location location) {
-    	this.location = location;
     }
 
     public Set<Days> getDays() {
@@ -87,11 +82,31 @@ public class Schedule {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+    
+    public Location getLocation() {
+    	return location;
+    }
+    
+    public void setLocation(Location location) {
+    	this.location = location;
+    }
 
-    // Additional method to determine if this schedule is active
     public boolean isActive() {
     	LocalDate currentDate = LocalDate.now();
         return (currentDate.isEqual(startDate) || currentDate.isAfter(startDate)) &&
                (currentDate.isEqual(endDate) || currentDate.isBefore(endDate));
     }
+    
+    public void validateDate() {
+    	if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date must be before end date.");
+        }
+    }
+    
+    public void validateTime() {
+    	if (startTime.isAfter(endTime)) {
+            throw new IllegalArgumentException("Start time must be before end time.");
+        }
+    }
+    
 }

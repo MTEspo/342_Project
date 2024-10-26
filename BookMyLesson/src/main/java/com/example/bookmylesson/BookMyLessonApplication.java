@@ -147,11 +147,7 @@ public class BookMyLessonApplication implements CommandLineRunner {
 
     private void displayAllOfferings(boolean withInstructor) {
     	
-    	List<Offering> offerings = null;
-    	if (withInstructor)
-    		offerings = offeringService.findAllOfferingsWithInstructor();
-    	else offerings = offeringService.findAllOfferings();
-    	
+    	List<Offering> offerings = offeringService.findAllOfferings();
     	if (offerings == null) {
     		System.out.println("Cannot retrieve offerings.");
     	} else if (offerings.isEmpty()) {
@@ -159,8 +155,6 @@ public class BookMyLessonApplication implements CommandLineRunner {
         } else {
             for (Offering offering : offerings) {
                 System.out.println("Offering ID: " + offering.getId());
-                System.out.println("Type: " + offering.getType());
-                System.out.println("Description: " + offering.getDescription());
                 System.out.println("Instructor: " + offering.getInstructor());
                 System.out.println("-------------");
             }

@@ -13,11 +13,18 @@ public class Admin {
     public static Admin login(String username, String password) {
         if (USERNAME.equals(username) && PASSWORD.equals(password)) {
         	instance = new Admin();
+        	return instance;
         }
-        return instance;
+        else {
+        	throw new IllegalStateException("Invalid credentials");
+        }
+        
     }
     
     public static Admin getInstance() {
+    	if (instance == null) {
+    		throw new IllegalStateException("Admin is not logged in");
+    	}
         return instance;
      }
 

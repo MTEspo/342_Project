@@ -1,11 +1,5 @@
 package com.example.bookmylesson.model.offering;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Set;
-
-import com.example.bookmylesson.enums.Days;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -21,8 +15,9 @@ public class Location {
     private String province;
     private String postalCode;
     
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Schedule> schedules;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
+    private Schedule schedule;
     
     // Constructor
     public Location() {}
@@ -80,12 +75,25 @@ public class Location {
         this.postalCode = postalCode;
     }
     
-    public Set<Schedule> getSchedules() {
-        return schedules;
+    public Schedule getSchedule() {
+        return schedule;
     }
 
-    public void setSchedules(Set<Schedule> schedules) {
-        this.schedules = schedules;
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+    
+    public boolean isDuplicate(Location other) {
+        return this.name.equalsIgnoreCase(other.getName()) &&
+               this.street.equalsIgnoreCase(other.getStreet()) &&
+               this.city.equalsIgnoreCase(other.getCity()) &&
+               this.province.equalsIgnoreCase(other.getProvince()) &&
+               this.postalCode.equalsIgnoreCase(other.getPostalCode());
+    }
+    
+    public void validateSchedule() {
+    	schedule.validateDate();
+    	schedule.validateTime();
     }
 
 }
