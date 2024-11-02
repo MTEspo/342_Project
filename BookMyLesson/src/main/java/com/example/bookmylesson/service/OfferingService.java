@@ -26,13 +26,8 @@ public class OfferingService {
     }
 
     public List<Offering> getOfferingsByInstructor() {
-    	User user = userService.getCurrentUser();
-    	if (user instanceof Instructor ) {
-    		return offeringRepository.findByInstructorId(user.getId());
-		}
-    	else {
-    		throw new IllegalStateException("User is not instructor");
-    	}
+    	authenticateInstructor();
+        return offeringRepository.findByInstructorId(userService.getCurrentUser().getId());
     }
 
     public Offering createOffering(Offering offering) {
@@ -43,7 +38,7 @@ public class OfferingService {
     }
     
     private void validateInstructor(Offering offering) {
-    	userService.AuthenticateInstructor();
+    	authenticateInstructor();
     	offering.setInstructor((Instructor)userService.getCurrentUser());
     }
 
@@ -71,6 +66,13 @@ public class OfferingService {
 
     private boolean timesOverlap(LocalTime start1, LocalTime end1, LocalTime start2, LocalTime end2) {
         return (start1.isBefore(end2) && end1.isAfter(start2));
+    }
+    
+    public void authenticateInstructor() {
+    	User user = userService.getCurrentUser();
+    	if (user instanceof Instructor) {
+    		throw new IllegalStateException("User is not instructor");
+    	}
     }
     
 }

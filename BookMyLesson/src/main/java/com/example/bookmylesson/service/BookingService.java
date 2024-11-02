@@ -31,7 +31,12 @@ public class BookingService {
     	}
     }
 	
+	public void cancelBooking(Booking booking) {
+        bookingRepository.delete(booking);
+    }
+	
 	public Booking createBooking(Booking booking) {
+		authenticateClient();
 		validateDoubleBooking(booking);
 		validatePrivateBooking(booking);
         return bookingRepository.save(booking);
@@ -53,5 +58,12 @@ public class BookingService {
 			}
 		}
 	}
+	
+	public void authenticateClient() {
+		User user = userService.getCurrentUser();
+    	if (user instanceof Client || user instanceof Representative) {
+    		throw new IllegalStateException("User is not instructor");
+    	}
+    }
 
 }

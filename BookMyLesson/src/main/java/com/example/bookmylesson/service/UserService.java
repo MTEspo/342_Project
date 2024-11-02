@@ -95,22 +95,4 @@ public class UserService {
         return currentUser;
     }
     
-    public void AuthenticateInstructor() {
-    	if (currentUser instanceof Instructor) {
-    		throw new IllegalStateException("User is not instructor");
-    	}
-    }
-    
-    public void AuthenticateClient() {
-    	if (currentUser instanceof Client) {
-    		throw new IllegalStateException("User is not client");
-    	}
-    }
-    
-    public void AuthenticateRepresentative() {
-    	if (currentUser instanceof Representative) {
-    		throw new IllegalStateException("User is not representative");
-    	}
-    }
-    
 }
