@@ -183,7 +183,7 @@ public class BookMyLessonApplication implements CommandLineRunner {
             activityTypes.add(ActivityType.valueOf(activityString.toUpperCase()));
         instructor.setSpecialization(activityTypes);
         
-        userService.registerUser(instructor);
+        userService.registerInstructor(instructor);
         instructorMenu(scanner);
     }
 
@@ -198,7 +198,7 @@ public class BookMyLessonApplication implements CommandLineRunner {
         	adminMenu(scanner);
         }
         else {
-        	userService.login(username, password);
+        	userService.loginAsInstructor(username, password);
         	instructorMenu(scanner);
         }
         

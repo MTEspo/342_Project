@@ -2,9 +2,7 @@ package com.example.bookmylesson.model.user;
 
 import jakarta.persistence.*;
 
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "\"user\"")  // Escapes the 'user' keyword
+@MappedSuperclass
 public abstract class User {
 
     @Id
@@ -16,7 +14,7 @@ public abstract class User {
     private String name;
     private String phone;
 
-    public User() {}  // Default constructor
+    public User() {}
 
     public User(String email, String password, String name, String phone) {
         this.email = email;
