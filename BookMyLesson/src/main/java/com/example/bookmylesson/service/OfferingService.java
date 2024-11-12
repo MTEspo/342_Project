@@ -24,6 +24,14 @@ public class OfferingService {
 	public List<Offering> findAllOfferings() {
 		return offeringRepository.findAll();
     }
+	
+	public List<Offering> findAllTakenOfferings() {
+		return offeringRepository.findByInstructorIsNotNull();
+    }
+	
+	public List<Offering> findAllOpenOfferings() {
+		return offeringRepository.findByInstructorIsNull();
+    }
 
     public List<Offering> getOfferingsByInstructor() {
     	authenticateInstructor();

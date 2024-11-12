@@ -32,6 +32,8 @@ public class BookingService {
     }
 	
 	public void cancelBooking(Booking booking) {
+		authenticateClient();
+		validateCancelBooking(booking);
         bookingRepository.delete(booking);
     }
 	
@@ -62,8 +64,14 @@ public class BookingService {
 	public void authenticateClient() {
 		User user = userService.getCurrentUser();
     	if (user instanceof Client || user instanceof Representative) {
-    		throw new IllegalStateException("User is not instructor");
+    		throw new IllegalStateException("User is not Client/Representative");
     	}
     }
+	
+	private void validateCancelBooking(Booking booking) {
+		if (booking.getClient().getId() != userService.getCurrentUser().getId()) {
+			throw new IllegalStateException("Logged in Client did not do this booking");
+		}
+	}
 
 }
