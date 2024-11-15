@@ -3,6 +3,8 @@ package com.example.bookmylesson.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.bookmylesson.model.admin.Admin;
+import com.example.bookmylesson.model.offering.Location;
 import com.example.bookmylesson.model.offering.Offering;
 import com.example.bookmylesson.model.offering.Schedule;
 import com.example.bookmylesson.repository.OfferingRepository;
@@ -38,20 +40,26 @@ public class OfferingService {
         return offeringRepository.findByInstructorId(userService.getCurrentUser().getId());
     }
 
-    public Offering createOffering(Offering offering) {
-    	validateInstructor(offering);
-    	validateOfferingTime(offering);
-        validateNoOverlap(offering);
+    public synchronized Offering createOffering(Offering offering, Location location) {
+    	if (Admin.getInstance() == null) {
+    		throw new IllegalStateException("Admin is not logged in");
+    	}
+    	
+    	validateOfferingTime(offering, location);
+        validateNoOverlap(offering, location);
+        offering.setLocation(location);
         return offeringRepository.save(offering);
     }
     
-    private void validateInstructor(Offering offering) {
+    public synchronized Offering takeOffering(Offering offering) {
     	authenticateInstructor();
+    	validateOpenOffering(offering);
     	offering.setInstructor((Instructor)userService.getCurrentUser());
+    	return offeringRepository.save(offering);
     }
 
-    private void validateOfferingTime(Offering offering) {
-        Schedule schedule = offering.getLocation().getSchedule();
+    private void validateOfferingTime(Offering offering, Location location) {
+        Schedule schedule = location.getSchedule();
         LocalTime scheduleStart = schedule.getStartTime();
         LocalTime scheduleEnd = schedule.getEndTime();
 
@@ -61,8 +69,8 @@ public class OfferingService {
         }
     }
 
-    private void validateNoOverlap(Offering offering) {
-        List<Offering> existingOfferings = offeringRepository.findByLocationId(offering.getLocation().getId());
+    private void validateNoOverlap(Offering offering, Location location) {
+        List<Offering> existingOfferings = offeringRepository.findByLocationId(location.getId());
 
         for (Offering existing : existingOfferings) {
             if (timesOverlap(offering.getStartTime(), offering.getEndTime(),
@@ -76,10 +84,16 @@ public class OfferingService {
         return (start1.isBefore(end2) && end1.isAfter(start2));
     }
     
-    public void authenticateInstructor() {
+    private void authenticateInstructor() {
     	User user = userService.getCurrentUser();
-    	if (user instanceof Instructor) {
+    	if (!(user instanceof Instructor)) {
     		throw new IllegalStateException("User is not instructor");
+    	}
+    }
+    
+    private void validateOpenOffering(Offering offering) {
+    	if (offering.getInstructor() != null) {
+    		throw new IllegalArgumentException("Offering already has an instructor.");
     	}
     }
     

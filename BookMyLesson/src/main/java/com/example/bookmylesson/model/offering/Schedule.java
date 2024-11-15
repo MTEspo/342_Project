@@ -109,4 +109,16 @@ public class Schedule {
         }
     }
     
+    @Override
+    public String toString() {
+        return "Schedule{" +
+               "id=" + id +
+               ", days=" + days +
+               ", startDate=" + startDate +
+               ", endDate=" + endDate +
+               ", startTime=" + startTime +
+               ", endTime=" + endTime +
+               '}';
+    }
+    
 }

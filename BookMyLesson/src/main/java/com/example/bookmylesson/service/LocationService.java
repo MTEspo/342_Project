@@ -14,8 +14,15 @@ public class LocationService {
 
     @Autowired
     private LocationRepository locationRepository;
+    
+    public List<Location> findAllLocations(){
+    	if (Admin.getInstance() == null) {
+    		throw new IllegalStateException("Admin is not logged in");
+    	}
+    	return locationRepository.findAll();
+    }
 
-    public Location createLocation(Location location, Schedule schedule) {
+    public synchronized Location createLocation(Location location, Schedule schedule) {
     	if (Admin.getInstance() == null) {
     		throw new IllegalStateException("Admin is not logged in");
     	}

@@ -95,6 +95,19 @@ public class Location {
     	schedule.validateDate();
     	schedule.validateTime();
     }
-
+    
+    @Override
+    public String toString() {
+        return "Location{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", street='" + street + '\'' +
+               ", city='" + city + '\'' +
+               ", province='" + province + '\'' +
+               ", postalCode='" + postalCode + '\'' +
+               ", schedule=" + (schedule != null ? schedule.toString() : "No Schedule Assigned") +
+               '}';
+    }
+    
 }
 

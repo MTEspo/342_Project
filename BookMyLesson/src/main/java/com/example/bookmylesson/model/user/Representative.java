@@ -10,6 +10,8 @@ public class Representative extends Client {
 	private String repEmail;
 	private int repAge;
 	
+	public Representative() {}
+	
 	public Representative(String email, String password, String name, String phone, int age, 
 			String repName, String repPhone, String repEmail, int repAge) {
 		super(email, password, name, phone, age);

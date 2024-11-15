@@ -18,7 +18,13 @@ public class Admin {
         else {
         	throw new IllegalStateException("Invalid credentials");
         }
-        
+    }
+    
+    public static void logout() {
+    	if (instance == null) {
+    		throw new IllegalStateException("Admin is not logged in");
+    	}
+    	instance = null;
     }
     
     public static Admin getInstance() {

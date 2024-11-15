@@ -26,12 +26,6 @@ public class Booking {
     // Constructors
     public Booking() {}
 
-    public Booking(Client client, Offering offering, LocalDateTime bookingDate) {
-        this.client = client;
-        this.offering = offering;
-        this.bookingDate = bookingDate;
-    }
-
     // Getters and Setters
     public Long getId() {
         return id;
@@ -64,5 +58,16 @@ public class Booking {
     public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
+    
+    @Override
+    public String toString() {
+        return "Booking {" +
+               "id=" + id +
+               ", client=" + (client != null ? client.getName() : "null") +
+               ", offering=" + (offering != null ? offering.toString() : "null") +
+               ", bookingDate=" + bookingDate +
+               '}';
+    }
+
 }
 

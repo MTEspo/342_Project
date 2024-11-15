@@ -26,19 +26,17 @@ public class Offering {
     private Location location;
     
     @ManyToOne
-    @JoinColumn(name = "instructor_id", nullable = false)
+    @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
     // Constructors
     public Offering() {}
     
-    public Offering(ActivityType activityType, LessonType lessonType, LocalTime startTime, LocalTime endTime, Location location, Instructor instructor) {
+    public Offering(ActivityType activityType, LessonType lessonType, LocalTime startTime, LocalTime endTime) {
     	this.activityType = activityType;
     	this.lessonType = lessonType;
     	this.startTime = startTime;
     	this.endTime = endTime;
-    	this.location = location;
-    	this.instructor = instructor;
     }
 
     // Getters and setters
@@ -92,6 +90,19 @@ public class Offering {
 
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
+    }
+    
+    @Override
+    public String toString() {
+        return "Offering {" +
+               "id=" + id +
+               ", activityType=" + activityType +
+               ", lessonType=" + lessonType +
+               ", startTime=" + startTime +
+               ", endTime=" + endTime +
+               ", location=" + (location != null ? location : "null") +
+               ", instructor=" + (instructor != null ? instructor.getName() : "null") +
+               '}';
     }
 
 }
