@@ -3,6 +3,7 @@ package com.example.bookmylesson.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.bookmylesson.enums.ActivityType;
 import com.example.bookmylesson.model.admin.Admin;
 import com.example.bookmylesson.model.offering.Location;
 import com.example.bookmylesson.model.offering.Offering;
@@ -12,7 +13,9 @@ import com.example.bookmylesson.model.user.Instructor;
 import com.example.bookmylesson.model.user.User;
 
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class OfferingService {
@@ -54,6 +57,8 @@ public class OfferingService {
     public synchronized Offering takeOffering(Offering offering) {
     	authenticateInstructor();
     	validateOpenOffering(offering);
+    	validateSpecialization(offering);
+    	validateCity(offering);
     	offering.setInstructor((Instructor)userService.getCurrentUser());
     	return offeringRepository.save(offering);
     }
@@ -95,6 +100,29 @@ public class OfferingService {
     	if (offering.getInstructor() != null) {
     		throw new IllegalArgumentException("Offering already has an instructor.");
     	}
+    }
+    
+    private void validateSpecialization(Offering offering) {
+    	Instructor instructor = (Instructor)userService.getCurrentUser();
+    	ActivityType offeringActivity = offering.getActivityType();
+    	Set<ActivityType> instructorSpecs = instructor.getSpecialization();
+    	
+    	if (!instructorSpecs.contains(offeringActivity)) {
+            throw new IllegalArgumentException("Instructor is not specialized in the activity type of the offering.");
+        }
+    }
+    
+    private void validateCity(Offering offering) {
+    	Instructor instructor = (Instructor)userService.getCurrentUser();
+    	String city = offering.getLocation().getCity().toLowerCase();
+    	Set<String> instructorCities = instructor.getCityAvailability();
+    	
+    	Set<String> lowerInstructorCities = new HashSet<>();
+        instructorCities.forEach(c -> lowerInstructorCities.add(c.toLowerCase()));
+    	
+    	if (!lowerInstructorCities.contains(city)) {
+            throw new IllegalArgumentException("Instructor is not available in the city of the offering.");
+        }
     }
     
 }

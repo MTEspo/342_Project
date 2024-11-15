@@ -69,7 +69,7 @@ public class BookingService {
 		if (offering.getLessonType() == LessonType.PRIVATE) {
 			List<Booking> existingBooking = bookingRepository.findByOfferingId(offering.getId());
 			if (existingBooking.size() > 0) {
-				throw new IllegalStateException("Client already has a booking for this offering");
+				throw new IllegalStateException("Offering is PRIVATE and has already been booked");
 			}
 		}
 	}
