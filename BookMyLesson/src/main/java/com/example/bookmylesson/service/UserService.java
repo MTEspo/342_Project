@@ -9,8 +9,7 @@ import com.example.bookmylesson.repository.UserRepository.*;
 @Service
 public class UserService {
 	
-	// Current logged-in user
-	private User currentUser;
+	private final ThreadLocal<User> currentUser = new ThreadLocal<>();
 	
     @Autowired
     private InstructorRepository instructorRepository;
@@ -25,7 +24,7 @@ public class UserService {
         if (instructorRepository.findByEmail(instructor.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Instructor already exists");
         }
-        this.currentUser = (User)instructor;
+        this.currentUser.set(instructor);
         instructorRepository.save(instructor);
     }
     
@@ -36,7 +35,7 @@ public class UserService {
         if (client.getAge() < 18) {
         	throw new IllegalStateException("Underage clients must register with representative");
         }
-        this.currentUser = (User)client;
+        this.currentUser.set(client);
         clientRepository.save(client);
     }
     
@@ -50,7 +49,7 @@ public class UserService {
         if (representative.getAge() >= 18) {
         	throw new IllegalStateException("Client does not need a Representative");
         }
-        this.currentUser = (User)representative;
+        this.currentUser.set(representative);
         representativeRepository.save(representative);
     }
     
@@ -60,7 +59,7 @@ public class UserService {
     	if (!password.equals(user.getPassword())) {
     		throw new IllegalArgumentException("Invalid password");
     	}
-    	this.currentUser = user;
+    	this.currentUser.set(user);
     }
     
     public void loginAsClient(String email, String password) {
@@ -69,7 +68,7 @@ public class UserService {
     	if (!password.equals(user.getPassword())) {
     		throw new IllegalArgumentException("Invalid password");
     	}
-    	this.currentUser = user;
+    	this.currentUser.set(user);
     }
     
     public void loginAsRepresentative(String email, String password) {
@@ -78,21 +77,21 @@ public class UserService {
     	if (!password.equals(user.getPassword())) {
     		throw new IllegalArgumentException("Invalid password");
     	}
-    	this.currentUser = user;
+    	this.currentUser.set(user);
     }
     
     public void logout() {
-    	if (currentUser == null) {
+    	if (currentUser.get() == null) {
     		throw new IllegalStateException("No user logged in");
     	}
-    	this.currentUser = null;
+    	this.currentUser.remove();
     }
     
     public User getCurrentUser() {
-    	if (currentUser == null) {
+    	if (currentUser.get() == null) {
     		throw new IllegalStateException("No user logged in");
     	}
-        return currentUser;
+        return currentUser.get();
     }
     
 }

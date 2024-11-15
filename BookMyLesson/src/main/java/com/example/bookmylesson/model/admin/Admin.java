@@ -10,8 +10,11 @@ public class Admin {
     // Private constructor to prevent instantiation
     private Admin() {}
 
-    public static Admin login(String username, String password) {
-        if (USERNAME.equals(username) && PASSWORD.equals(password)) {
+    public static synchronized Admin login(String username, String password) {
+    	if (instance != null) {
+        	throw new IllegalStateException("Admin already logged in");
+    	}
+    	else if (USERNAME.equals(username) && PASSWORD.equals(password)) {
         	instance = new Admin();
         	return instance;
         }
@@ -20,14 +23,14 @@ public class Admin {
         }
     }
     
-    public static void logout() {
+    public static synchronized void logout() {
     	if (instance == null) {
     		throw new IllegalStateException("Admin is not logged in");
     	}
     	instance = null;
     }
     
-    public static Admin getInstance() {
+    public static synchronized Admin getInstance() {
     	if (instance == null) {
     		throw new IllegalStateException("Admin is not logged in");
     	}
